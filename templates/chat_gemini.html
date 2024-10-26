@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <link rel="icon" href="{{ url_for('static', filename='img/favicon.png') }}" type="image/png">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f8fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        .chat-container {
+            width: 100%;
+            max-width: 450px;
+            background-color: white;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 1.8em;
+            color: #4CAF50;
+            margin-bottom: 15px;
+        }
+        #chatbox {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 5px;
+            margin-bottom: 10px;
+            scrollbar-width: thin;
+            scrollbar-color: #ccc transparent;
+        }
+        .chat-message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            line-height: 1.5;
+            font-size: 0.95em;
+            animation: fadeIn 0.3s ease;
+        }
+        .user-message {
+            background-color: #d0f0c0;
+            margin-left: auto;
+            color: #333;
+        }
+        .bot-message {
+            background-color: #e0f7fa;
+            color: #333;
+        }
+        .input-container {
+            display: flex;
+            gap: 10px;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1em;
+            outline: none;
+            transition: border 0.2s;
+        }
+        input[type="text"]:focus {
+            border-color: #4CAF50;
+        }
+        button {
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease, transform 0.2s;
+        }
+        #sendMessage {
+            background-color: #4CAF50;
+            color: white;
+        }
+        #sendMessage:hover {
+            background-color: #388e3c;
+            transform: translateY(-2px);
+        }
+        #micButton {
+            background-color: #42a5f5;
+            color: white;
+        }
+        #micButton:hover {
+            background-color: #1e88e5;
+            transform: translateY(-2px);
+        }
+        .audio-container {
+            text-align: center;
+            margin-top: 10px;
+        }
+        #playAudio {
+            padding: 8px 15px;
+            background-color: #8d6e63;
+            color: white;
+            border-radius: 8px;
+            display: inline-block;
+            margin-top: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        #playAudio:hover {
+            background-color: #6d4c41;
+            transform: translateY(-2px);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .center {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .center button {
+            padding: 12px 25px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: background-color 0.3s ease, transform 0.2s;
+        }
+        .center button:hover {
+            background-color: #45a049;
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <h1>Chatbot CPA</h1>
+        <div id="chatbox">
+            <!-- Messages will be added here -->
+        </div>
+        <div class="input-container">
+            <input type="text" id="userInput" placeholder="Escreva sua pergunta...">
+            <button id="micButton">🎤</button>
+            <button id="sendMessage">Enviar</button>
+        </div>
+        <div class="audio-container">
+            <audio id="audioPlayer" controls style="display: none;"></audio>
+            <button id="playAudio" style="display: none;">🔊 Reproduzir</button>
+        </div>
+
+        <div class="center">
+            <a href="/">
+                <button>Voltar ao Menu</button>
+            </a>
+        </div>
+    </div>
+
+    
+
+    <script>
+        let isRecording = false;
+
+        document.getElementById('sendMessage').addEventListener('click', function() {
+            const userMessage = document.getElementById('userInput').value;
+
+            if (userMessage.trim() === '') return;
+
+            addUserMessage(userMessage);
+            sendMessageToGemini(userMessage);
+
+            document.getElementById('userInput').value = '';
+        });
+
+        function addUserMessage(message) {
+            const chatbox = document.getElementById('chatbox');
+            const userMessageDiv = document.createElement('div');
+            userMessageDiv.classList.add('chat-message', 'user-message');
+            userMessageDiv.textContent = message;
+            chatbox.appendChild(userMessageDiv);
+            chatbox.scrollTop = chatbox.scrollHeight;
+        }
+
+        function sendMessageToGemini(message) {
+            fetch('/chat_gemini', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: message })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const botMessageDiv = document.createElement('div');
+                botMessageDiv.classList.add('chat-message', 'bot-message');
+                botMessageDiv.textContent = data.response ? "CPA: " + data.response : "Resposta não encontrada";
+                document.getElementById('chatbox').appendChild(botMessageDiv);
+                document.getElementById('chatbox').scrollTop = document.getElementById('chatbox').scrollHeight;
+
+                if (data.response) {
+                    generateTTS(data.response);
+                }
+            })
+            .catch(error => console.error('Erro:', error));
+        }
+
+        function generateTTS(text) {
+            fetch('/tts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: text })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.audio_url) {
+                    const audioPlayer = document.getElementById('audioPlayer');
+                    const playButton = document.getElementById('playAudio');
+
+                    audioPlayer.src = data.audio_url + '?t=' + new Date().getTime();
+                    audioPlayer.style.display = 'block';
+                    playButton.style.display = 'block';
+                    playButton.onclick = () => {
+                        audioPlayer.load();
+                        audioPlayer.play();
+                    };
+                } else {
+                    console.error('Erro ao gerar áudio:', data.error);
+                }
+            })
+            .catch(error => console.error('Erro ao conectar ao TTS:', error));
+        }
+    </script>
+</body>
+</html>
