@@ -10,15 +10,14 @@ import pyttsx3
 import whisper
 import logging
 import google.generativeai as genai
-#from google.cloud import texttospeech
-#from google.cloud import speech
+from google.cloud import texttospeech
+from google.cloud import speech
 from functions.data_transform import completa_dataframe_agricola
 
 
-# Ajustar o caminho para ser relativo à localização do script
 modelo_path = os.path.join(os.path.dirname(__file__), 'models', 'random_forest_regressor_model.sav')
 
-# Carregar o modelo
+#carregando o modelo 
 with open(modelo_path, 'rb') as model_file:
     modelo = pickle.load(model_file)
     
@@ -30,21 +29,19 @@ app.secret_key = '6acad0a12d21148a992875e2cf935d0a06c322eea013daf9'
 logging.basicConfig(level=logging.DEBUG)
 
 
-# Chave da API do OpenWeather
-API_KEY_OPENWEATHER = 'feb621f31616567d7b527508213b0860'
 
 # Chave da API do Gemini
-GEMINI_API_KEY = 'AIzaSyCXJp2GnIVz6d7oBHeXkYUD99vZkuVYzfA'
+GEMINI_API_KEY = 'AIzaSyAp1Eopp7Y_qWFrusiIIpT9gxaE641CEjE'
 genai.configure(api_key=GEMINI_API_KEY)
 
 
-# Dados simulados (substitua por consulta ao banco de dados, quando ele voltar a funcionar !!!! -_- )
+# Dados simulados (substitua por consulta ao banco de dados)
 estoque = []
 despesas = []
 lucro_total = 0
 despesas_totais = 0
 
-# Dados simulados (substitua por consulta ao banco de dados, quando ele voltar a funcionar !!!! -_- )
+# Dados simulados (substitua por consulta ao banco de dados )
 estoque = [
     {'descricao': 'Sementes de Milho', 'tipo': 'semente', 'quantidade': 200, 'data_cadastro': '2024-09-01', 'data_expiracao': '2025-01-01', 'valor_unitario': 25, 'valor_total': 5000, 'lucro_estimado': 10000},
     {'descricao': 'Fertilizante', 'tipo': 'fertilizante', 'quantidade': 50, 'data_cadastro': '2024-08-15', 'data_expiracao': '2024-12-15', 'valor_unitario': 30, 'valor_total': 1500, 'lucro_estimado': 3000},
@@ -52,7 +49,7 @@ estoque = [
 ]
 
 
-# Dados simulados (substitua por consulta ao banco de dados, quando ele voltar a funcionar !!!! -_- )
+# Dados simulados (substitua por consulta ao banco de dados)
 equipamentos = [
     {
         'id': 1,
@@ -79,7 +76,7 @@ equipamentos = [
 ]
 
 
-# Dados simulados (substitua por consulta ao banco de dados, quando ele voltar a funcionar !!!! -_- )
+# Dados simulados (substitua por consulta ao banco de dados)
 funcionarios = [
     {
         'id': 1,
@@ -106,12 +103,12 @@ funcionarios = [
 
 
 
-# Conexão com o banco de dados Oracle
+# Conexão com o DB Oracle da faculdade
 dsn = cx_Oracle.makedsn("oracle.fiap.com.br", 1521, service_name="ORCL")
 connection = cx_Oracle.connect(user='RM552051', password='140400', dsn=dsn)
 conn = cx_Oracle.connect(user='RM552051', password='140400', dsn=dsn)
 
-# Local para salvar as imagens de upload
+#salvar as imagens de upload
 UPLOAD_FOLDER = './static/uploads'
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
@@ -220,14 +217,8 @@ def resultado_pragas():
     return render_template('resultado_pragas.html')
 
 
-
-
-
-
-
-#######
 ###### VER PLANTAÇÃO ###########
-# Simular banco de dados de plantações no servidor
+# Simula banco de dados de plantações no servidor
 plantacoes_servidor = []
 
 @app.route('/api/salvar_plantacao', methods=['POST'])
@@ -263,16 +254,6 @@ def nova_plantacao_page():
 def areas_plantio():
     return render_template('areas_plantio.html', plantacoes=plantacoes_servidor)
 
-
-
-
-
-
-
-
-
-
-#######
 ###### ESTOQUE ###########
 
 # Rota para exibir o dashboard de controle de estoque, lucros e despesas
@@ -291,7 +272,7 @@ def api_dashboard():
 # Simulação de banco de dados em memória
 estoque_db = []
 
-# Função para simular cálculo de lucro (ajuste conforme necessário)
+# Função para simular cálculo de lucro 
 def calcular_lucro(valor_unitario, quantidade):
     # Simulação: o lucro estimado é 20% do valor total
     lucro_estimado = valor_unitario * quantidade * 0.2
@@ -397,9 +378,6 @@ def cadastro_estoque():
     return render_template('cadastro_estoque.html')
 
 
-
-#######
-#######
 ####### EQUIPAMENTOS ###########
 
 # Rota pagina equipamentos
@@ -482,12 +460,6 @@ def delete_equipamento(id):
         return jsonify({"error": "Equipamento não encontrado"}), 404
     equipamentos.pop(id)
     return jsonify({"message": "Equipamento removido com sucesso"}), 200
-
-
-
-
-
-
     
 # Rota para atualizar o status do equipamento
 @app.route('/api/equipamentos/<int:id>', methods=['PATCH'])
@@ -518,9 +490,6 @@ def atualizar_status_equipamento(id):
     return jsonify({'message': 'Equipamento atualizado com sucesso', 'equipamento': equipamento}), 200
 
 
-
-
-#######
 ####### FUNCIONARIOS ###########
 @app.route('/funcionarios')
 def funcionarios_page():
@@ -533,9 +502,6 @@ def novo_funcionario():
     return render_template('cadastro_funcionario.html')
 
 
-
-#######
-#######
 ####### RESPONSABILIDADES funcionarios ###########
 # Dados simulados para plantações, atividades ativas e realizadas
 plantacoes = [
@@ -693,7 +659,7 @@ def cadastrar_atividade():
         "area_plantio": data['plantacaoSelecionada'],
         "tipo": data['tipoAtividade'],
         "equipamento": [data['equipamento']],
-        "funcionario": "João da Silva",  # Exemplo fixo de funcionário
+        "funcionario": "João da Silva", 
         "data_maxima": data['dataRealizacao'],
         "status": "pendente"
     }
@@ -702,8 +668,6 @@ def cadastrar_atividade():
     return jsonify({'message': 'Atividade cadastrada com sucesso!'}), 201
 
 
-#######
-#######
 ####### RESPONSABILIDADES funcionarios ###########
 
 
@@ -713,10 +677,6 @@ def get_funcionarios():
     return jsonify(funcionarios)
 
 
-
-
-#######
-#######
 ####### PLANTAÇÃO ###########
 @app.route('/plantacao', methods=['GET'])
 def plantacao_page():
@@ -734,18 +694,11 @@ def nova_plantacao():
 def nova_area():
     return render_template('nova_area.html')
 
-#######
-#######
 ####### FINANCEIRO ###########
 @app.route('/financeiro')
 def financeiro_page():
     return render_template('financeiro.html')
 
-
-
-
-#######
-#######
 ####### CRONOGRAMA ###########
 @app.route('/cronograma')
 def cronograma_page():
@@ -755,8 +708,6 @@ def cronograma_page():
 @app.route('/api/cronograma', methods=['POST'])
 
 
-#######
-#######
 ####### LOGISTICA ###########
 @app.route('/logistica')
 def logistica_page():
@@ -770,14 +721,7 @@ def logistica_page():
 @app.route('/api/entrega', methods=['POST'])
 
 
-
-
-
-#######
-#######
 ####### ATIVIDADES ###########
-
-
 # Rota para cadastro de atividades
 @app.route('/api/atividades', methods=['POST'])
 
@@ -785,31 +729,26 @@ def logistica_page():
 def atividades_page():
     return render_template('atividades.html')
 
-# Dados temporários para simular o banco de dados
+# Dados temporários para simular o DB
 atividades_concluidas = [
     {"id": 2, "nome": "Colheita", "area_plantio": "Área 2", "tipo": "Colheita", "equipamento": ["Colheitadeira"], "funcionario": "Maria", "data_realizacao": "2024-09-22", "tempo_gasto": "2 horas"},
     
 ]
 
 
-#API_KEY_OPENWEATHER = 'feb621f31616567d7b527508213b0860'
 
 def obter_previsao(cidade):
-    # URL base para a API OpenWeather
     BASE_URL = "https://api.openweathermap.org/data/2.5/weather"
     API_KEY_OPENWEATHER = 'feb621f31616567d7b527508213b0860'
-    # Monta a URL com base na cidade e na chave de API
     request_url = f"{BASE_URL}?appid={API_KEY_OPENWEATHER}&q={cidade}&lang=pt_br"
 
-    # Faz a requisição para a API
+    #requisição para a API
     response = requests.get(request_url)
     
-    # Verifica se a requisição foi bem-sucedida
     if response.status_code == 200:
         data = response.json()
-        # Extrai a descrição do tempo e a temperatura
         weather = data['weather'][0]['description']
-        temperature = round(data["main"]["temp"] - 273.15, 2)  # Convertendo de Kelvin para Celsius
+        temperature = round(data["main"]["temp"] - 273.15, 2)  # convertendo para celsius
         return {
             "descricao": weather,
             "temperatura": temperature
@@ -821,12 +760,11 @@ def obter_previsao(cidade):
 @app.route('/drone_ia', methods=['GET', 'POST'])
 def drone_ia():
     if request.method == 'POST':
-        cidade = request.form.get('cidade')  # Obtém a cidade do formulário de drone_ia.html
+        cidade = request.form.get('cidade')  
         if not cidade:
             flash('Por favor, insira o nome da cidade.', 'error')
             return redirect(url_for('drone_ia'))
 
-        # Buscar a previsão do tempo
         previsao_data = obter_previsao(cidade)
         if previsao_data:
             return jsonify({"previsao": previsao_data})
@@ -857,9 +795,6 @@ colunas_modelo = [
 
 logging.basicConfig(level=logging.DEBUG)
 
-#chave da API do Openweather
-
-#chave da API do Gemini
 
 # Função para calcular custo de fertilizantes
 def calculate_fertilizer_cost(fertilizer, perimetro, quantidade):
@@ -946,24 +881,18 @@ def predict():
         return str(e), 400   
 
 
-
-# Unificação da rota para lidar com GET e POST
 @app.route('/chat_gemini', methods=['GET', 'POST'])
 def chat_gemini():
     if request.method == 'POST':
         try:
-            # Pega a pergunta do usuário enviada como JSON
             data = request.json
-            prompt = data.get('message')  # Obtém a mensagem enviada pelo usuário
+            prompt = data.get('message')  #mensagem enviada pelo usuário
 
-            # Inicializando o modelo e começando o chat
             model = genai.GenerativeModel("gemini-1.5-flash")
             chat = model.start_chat(history=[])
-
-            # Envia a mensagem do usuário e obtém a resposta
             response = chat.send_message(prompt)
 
-            # Retorna a resposta como JSON
+            #retorna a resposta
             return jsonify({"response": response.text})
 
         except Exception as e:
