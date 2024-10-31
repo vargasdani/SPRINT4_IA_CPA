@@ -40,6 +40,7 @@ Requirements:
 
 pip install flask pandas numpy requests scikit-learn==1.2.2 google.generativeai
 pip install --upgrade google-cloud google-cloud-texttospeech 
+pip install pickle pip install cx_Oracle pip install pyttsx3 pip install whisper
 
 Para instalar essas bibliotecas no seu computador:
 1. Abra o terminal (cmd)
