@@ -1,5 +1,3 @@
-
-
 Sobre o Projeto:
 
 https://www.canva.com/design/DAGRHMXIphk/tT9LsLDum8_M4ljDm_DVNw/edit
@@ -14,16 +12,16 @@ Nosso clima favorece a agricultura, porém, ainda assim, é necessário tomar cu
 
 E é nisso, que nosso grupo entra com uma solução; queremos prestar serviço e tornar a previsão de safras personalizável para cada fazenda, reduzindo perdas e custos, aumentando a performance do plantio e melhorando a previsibilidade de resultados (vendas, lucro, fluxo de caixa...). Impactando desde agricultores de pequena escala a grandes produtores agrícolas.
 
-Nosso projeto pivotou e nossos objetivos aumentaram, além de analisar dados históricos (que seriam de produção), será possível também um serviço de consulta ao clima atual para todas as cidades, não só do Brasil, visando diminuir que desastres climaticos atinjam as plantações. Além dessa previsão de safras, você pode consultar também uma média de quanto gastará com fertilizantes, que aumentaram muito o preço no cenário mundial atual. E com a nossa integração com a API do Gemini, teremos uma espécie de Chatbot disponibilizado para que o produtor rural possa tirar suas dúvidas relacionadas ao ramo agricola também, com a resposta tranformada em audio.
+Nosso projeto pivotou e nossos objetivos aumentaram, além de analisar dados históricos (que seriam de produção), será possível também um serviço de consulta ao clima atual para todas as cidades, não só do Brasil, visando diminuir que desastres climáticos atinjam as plantações. Além dessa previsão de safras, você pode consultar também uma média de quanto gastará com fertilizantes, que aumentaram muito o preço no cenário mundial atual. E com a nossa integração com a API do Gemini, teremos uma espécie de Chatbot disponibilizado para que o produtor rural possa tirar suas dúvidas relacionadas ao ramo agrícola também, com a resposta transformada em áudio.
 
-Além disso, nossa IA por imagem fornece um diagnóstico de pragas e doenças e possam estar ameaçando a plantação. Por fim, temos toda uma parte focada na gestão da fazenda, equipamentos, estoque, logísitica e funcionários, utilizados como exmeplo.
+Além disso, nossa IA por imagem fornece um diagnóstico de pragas e doenças e possam estar ameaçando a plantação. Por fim, temos toda uma parte focada na gestão da fazenda, equipamentos, estoque, logística e funcionários, utilizados como exemplo.
 
 
-Juntamos todas essas funcionalidades e disponibilizamos para nosso usuário final através de um aplicativo com a interface intuitiva e amigavel.
+Juntamos todas essas funcionalidades e disponibilizamos para nosso usuário final através de um aplicativo com a interface intuitiva e amigável.
 
 Por favor, siga as instruções para rodar a aplicação e seu resultado deve ser algo parecido com isso:
 
-
+![image](https://github.com/user-attachments/assets/ab42f050-131c-4a3b-85dc-e06090cc6778)
 
 
 Requirements:
@@ -54,4 +52,3 @@ Para rodar o projeto:
 - Dentro do arquivo, em qualquer lugar, clique com o botão direito do mouse -> Run Python -> Run Python File in Terminal
 - O console irá abrir e mostrará algo como "* Running on http://127.0.0.1:8080"
 - No console, coloque o mouse em cima do link e pressione Ctrl + Clique
-
